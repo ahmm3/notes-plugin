@@ -1,12 +1,16 @@
-local ts_utils = require('nvim-treesitter.ts_utils')
-local utils = require('notes-plugin.utils')
+local ts_utils = require("nvim-treesitter.ts_utils")
+local utils = require("notes-plugin.utils")
 
 local M = {}
 
 M.find_parent_node = function(node, type)
     local root = ts_utils.get_root_for_node(node)
-    if (node == root) then return nil end
-    if (node:type() == type) then return node end
+    if node == root then
+        return nil
+    end
+    if node:type() == type then
+        return node
+    end
     return M.find_parent_node(node:parent(), type)
 end
 
@@ -36,19 +40,19 @@ end
 M.toggle_checkbox = function()
     local node = M.get_markdown_node_at_cursor()
 
-    local list_item = M.find_parent_node(node, 'list_item')
+    local list_item = M.find_parent_node(node, "list_item")
     if not list_item then
         return
     end
 
-    local unchecked_checkbox = M.find_child_node(list_item, 'task_list_marker_unchecked')
+    local unchecked_checkbox = M.find_child_node(list_item, "task_list_marker_unchecked")
     if unchecked_checkbox then
         local row_start, col_start, row_end, col_end = unchecked_checkbox:range()
         vim.api.nvim_buf_set_text(0, row_start, col_start, row_end, col_end, { "[x]" })
         return
     end
 
-    local checked_checkbox = M.find_child_node(list_item, 'task_list_marker_checked')
+    local checked_checkbox = M.find_child_node(list_item, "task_list_marker_checked")
     if checked_checkbox then
         local row_start, col_start, row_end, col_end = checked_checkbox:range()
         vim.api.nvim_buf_set_text(0, row_start, col_start, row_end, col_end, { "[ ]" })
@@ -66,7 +70,7 @@ M.follow_link = function()
         return
     end
 
-    local filepath = string.format("%s/%s", require('notes-plugin').config.notes_dir, link_name)
+    local filepath = string.format("%s/%s", require("notes-plugin").config.notes_dir, link_name)
 
     -- see if we can open the file as it is
     if vim.fn.filereadable(filepath) == 1 then

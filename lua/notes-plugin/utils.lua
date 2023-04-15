@@ -1,7 +1,7 @@
 local M = {}
 
 M.match_link = function(s)
-    local pattern = '%[.*%]%((.+)%)'
+    local pattern = "%[.*%]%((.+)%)"
     return string.match(s, pattern)
 end
 
