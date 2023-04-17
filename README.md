@@ -18,11 +18,16 @@ require('notes-plugin').toggle_checkbox()
 ```
 
 ### Telescope integration
+#### Find or create a note
 ``` lua
 -- Find or create a note
 -- :ZettelFind
 
--- Insert link to an existing note
+-- Use M-RET to create the note note with the current name even if something is selected
+```
+
+#### Insert link to an existing note
+``` lua
 -- :ZettelInsertLink
 ```
 

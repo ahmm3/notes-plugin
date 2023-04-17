@@ -27,7 +27,7 @@ local function setup_user_commands()
             prompt_title = "Find a note",
             cwd = notes_dir,
             attach_mappings = function(prompt_bufnr)
-                actions.select_default:replace(telescope_integration.insert_selection_as_link)
+                actions.select_default:replace(telescope_integration.action_insert_selection_as_link)
                 return true
             end,
         })
