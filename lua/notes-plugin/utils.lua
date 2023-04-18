@@ -19,4 +19,31 @@ M.strip_extension = function(s, ext)
     return s
 end
 
+-- todo: move to different file
+M.open_popup_window = function(filepath)
+    local ui = vim.api.nvim_list_uis()[1]
+    local width = math.floor(ui.width / 2)
+    local height = math.floor(ui.height / 2)
+
+    local buffer = vim.api.nvim_create_buf(false, true)
+
+    local opts = {
+        relative = "editor",
+        width = width,
+        height = height,
+        col = (ui.width - width) / 2,
+        row = (ui.height - height) / 2,
+        style = "minimal",
+        border = "rounded",
+        title = "Capture to a note - type 'Q' to quit",
+        title_pos = "center",
+    }
+
+    vim.api.nvim_open_win(buffer, true, opts)
+    vim.cmd("edit " .. filepath)
+
+    -- Save and quit with Q
+    vim.keymap.set("n", "Q", "<cmd>wq<cr>", { buffer = buffer, desc = "Write and quit" })
+end
+
 return M

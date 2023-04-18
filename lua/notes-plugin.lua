@@ -17,7 +17,26 @@ local function setup_user_commands()
         opts = require("telescope.themes").get_dropdown({
             cwd = notes_dir,
         })
-        telescope_integration.find_or_create_note(opts)
+        telescope_integration.picker_find_or_create_note(opts)
+    end, {})
+
+    -- :ZettelCapture - like :ZettelFind but in a quick buffer
+    vim.api.nvim_create_user_command("ZettelCapture", function(opts)
+        opts = require("telescope.themes").get_dropdown({
+            previewer = false,
+            prompt_title = "Find a note for capture",
+            cwd = notes_dir,
+            attach_mappings = function(prompt_bufnr, map)
+                actions.select_default:replace(telescope_integration.action_edit_in_popup)
+
+                -- Create a new note even if something matches with M-RET
+                map({ "i", "n" }, "<M-CR>", telescope_integration.action_create_note_popup, { desc = "create_note" })
+
+                return true
+            end,
+        })
+
+        require("telescope.builtin").find_files(opts)
     end, {})
 
     -- :ZettelInsertLink - insert link under the cursor
