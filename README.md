@@ -31,6 +31,12 @@ require('notes-plugin').toggle_checkbox()
 -- :ZettelInsertLink
 ```
 
+#### Quickly create / edit note in a popup window
+``` lua
+-- :ZettelCapture
+-- Use M-RET to create the note note with the current name even if something is selected
+```
+
 ## Markdown tweaks
 - Better syntax highlighting - for now hard coded to gruvbox
   + Independently colored headlines
