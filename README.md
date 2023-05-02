@@ -11,6 +11,16 @@ require('notes-plugin').follow_link()
 require('notes-plugin').toggle_checkbox()
 ```
 
+### Markdown table of contents
+``` lua
+-- Toggle table of contents for the current buffer
+require('notes-plugin').toggle_toc()
+```
+
+- It will highlight the current heading in the parent window
+- Hitting RET will focus the heading
+- Table of contents will be closed when the buffer in the parent window is changed
+
 ### Other actions
 ``` lua
 -- Edit index file

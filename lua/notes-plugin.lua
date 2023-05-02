@@ -5,8 +5,14 @@ local telescope_integration = require("notes-plugin.telescope-integration")
 local M = {}
 
 -- default config, this is filled in setup()
-M.config = {
+M.config = {}
+
+local DEFAULT_OPTS = {
     notes_dir = nil,
+    markdown_toc = {
+        position = "right",
+        width = 50,
+    },
 }
 
 local function setup_user_commands()
@@ -30,7 +36,12 @@ local function setup_user_commands()
                 actions.select_default:replace(telescope_integration.action_edit_in_popup)
 
                 -- Create a new note even if something matches with M-RET
-                map({ "i", "n" }, "<M-CR>", telescope_integration.action_create_note_popup, { desc = "create_note" })
+                map(
+                    { "i", "n" },
+                    "<M-CR>",
+                    telescope_integration.action_create_note_popup,
+                    { desc = "create_note" }
+                )
 
                 return true
             end,
@@ -46,7 +57,9 @@ local function setup_user_commands()
             prompt_title = "Find a note",
             cwd = notes_dir,
             attach_mappings = function(prompt_bufnr)
-                actions.select_default:replace(telescope_integration.action_insert_selection_as_link)
+                actions.select_default:replace(
+                    telescope_integration.action_insert_selection_as_link
+                )
                 return true
             end,
         })
@@ -68,10 +81,26 @@ local function setup_autocmds()
         group = augroup,
         callback = function()
             -- local keybindings - available in markdown file
-            vim.keymap.set("n", "<CR>", markdown.follow_link, { buffer = true, desc = "Follow link" })
+            vim.keymap.set(
+                "n",
+                "<CR>",
+                markdown.follow_link,
+                { buffer = true, desc = "Follow link" }
+            )
 
             -- local leader keybindings - available in markdown file
-            vim.keymap.set("n", "<localleader>t", markdown.toggle_checkbox, { buffer = true, desc = "Toggle checkbox" })
+            vim.keymap.set(
+                "n",
+                "<localleader>,",
+                markdown.toggle_checkbox,
+                { buffer = true, desc = "Toggle checkbox" }
+            )
+            vim.keymap.set(
+                "n",
+                "<localleader>t",
+                M.toggle_toc,
+                { buffer = true, desc = "Toggle table of contents" }
+            )
             vim.keymap.set(
                 "n",
                 "<localleader>i",
@@ -84,14 +113,17 @@ end
 
 -- public interface
 M.setup = function(opts)
-    local notes_dir = vim.fn.expand(opts.notes_dir)
+    local config = vim.tbl_extend("force", DEFAULT_OPTS, opts or {})
+    M.config = config
 
-    M.config = {
-        notes_dir = notes_dir,
-    }
+    M.config.notes_dir = vim.fn.expand(M.config.notes_dir)
+    assert(vim.fn.isdirectory(M.config.notes_dir) == 1, "You have to specify a valid `notes_dir`")
 
     setup_user_commands()
     setup_autocmds()
 end
+
+-- Reexport
+M.toggle_toc = require("notes-plugin.markdown-toc").toggle
 
 return M

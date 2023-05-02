@@ -47,13 +47,13 @@ M.action_edit_in_popup = function(prompt_bufnr)
     end
 
     actions.close(prompt_bufnr)
-    utils.open_popup_window(filepath)
+    utils.open_file_in_popup(filepath)
 end
 
 M.action_create_note_popup = function(prompt_bufnr)
     local filepath = current_line_to_filepath(prompt_bufnr)
     actions.close(prompt_bufnr)
-    utils.open_popup_window(filepath)
+    utils.open_file_in_popup(filepath)
 end
 
 M.action_create_note = function(prompt_bufnr)
